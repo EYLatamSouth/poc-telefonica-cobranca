@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
@@ -11,6 +12,8 @@ import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.apache.commons.net.ftp.FTPClient;
 
 public class Functions {    
     
@@ -34,6 +37,21 @@ public class Functions {
 	    bw.close();
 	    fw.close();
     }	
+	
+	public static void createFileFtp(String hostName, String fileName, String userName, String password, String text) throws IOException {
+		FTPClient ftp = new FTPClient();
+		ftp.connect( hostName );
+		ftp.login( userName, password );
+		//ftp.changeWorkingDirectory (diretorio);
+
+		OutputStream os = ftp.storeFileStream(fileName);
+		os.write(text.getBytes());
+		os.flush();
+		os.close();
+
+		ftp.logout();
+		ftp.disconnect();
+    }
 	
 	public static String encrypt(String plainText) throws Exception {
 
