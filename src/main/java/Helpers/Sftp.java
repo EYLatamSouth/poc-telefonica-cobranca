@@ -1,6 +1,7 @@
 package Helpers;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -11,12 +12,15 @@ public class Sftp {
 	private String remoteHost = "bancos.blob.core.windows.net";
 	private String username = "bancos.envio.telefonica";
 	private String password = "Ia6GM3ceCT+HfXaN+39GUnjAO9n3xe9G";
-	
-	public void connect() throws JSchException, IOException {				
+
+	public void connect() throws JSchException, IOException {
 	    JSch jsch = new JSch();	    
 	    //jsch.setKnownHosts("/Users/john/.ssh/known_hosts");
 	    Session jschSession = jsch.getSession(username, remoteHost, 22);
 	    jschSession.setPassword(password);
+		Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+		jschSession.setConfig(config);
 	    
 	    try {
 	    	jschSession.connect();	    	
