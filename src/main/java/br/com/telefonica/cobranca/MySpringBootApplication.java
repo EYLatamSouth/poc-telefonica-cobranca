@@ -14,12 +14,20 @@ public class MySpringBootApplication {
         SpringApplication.run(MySpringBootApplication.class, args);
         
         String text = "abc123";
-        String textEncript = Helpers.Functions.encrypt(text);
-        String textDecript = Helpers.Functions.decrypt(textEncript);
+        //String textEncript = Helpers.Functions.encrypt(text);
+        //String textDecript = Helpers.Functions.decrypt(textEncript);
         
-        Helpers.Functions.createFile("TestFile1.txt", text);
-        Helpers.Functions.createFile("TestFile2.txt", textEncript);
-        Helpers.Functions.createFile("TestFile3.txt", textDecript);
+        //Helpers.Functions.createFile("TestFile1.txt", text);
+        //Helpers.Functions.createFile("TestFile2.txt", textEncript);
+        //Helpers.Functions.createFile("TestFile3.txt", textDecript);
+        
+        Helpers.Functions.createFileFtp3();
+        /*Helpers.Functions.createFileFtp(
+        		"bancos.envio.telefonica@bancos.blob.core.windows.net", 
+        		"TestFile1.txt", 
+        		"telefonica", 
+        		"Ia6GM3ceCT+HfXaN+39GUnjAO9n3xe9G", 
+        		"texto criptografado teste 1");*/
     }
 
 }

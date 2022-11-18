@@ -1,6 +1,7 @@
 package Helpers;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +15,9 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+
+import com.jcraft.jsch.JSchException;
 
 public class Functions {    
     
@@ -38,6 +42,35 @@ public class Functions {
 	    fw.close();
     }	
 	
+	public static void createFileFtp() throws IOException {
+		FTPClient ftp = new FTPClient();
+		try
+		{			
+			ftp.connect("sftp://bancos.blob.core.windows.net", 22);
+		}
+		catch(IOException ex)
+		{
+			throw new IOException("Não foi possível conectar-se ao FTP.");
+		}
+			
+		if( FTPReply.isPositiveCompletion(ftp.getReplyCode()) )
+		{
+			try
+			{
+				ftp.login("telefonica", "Ia6GM3ceCT+HfXaN+39GUnjAO9n3xe9G");
+				ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
+			}
+			catch(IOException ex)
+			{
+				throw new IOException("Não foi possível logar-se ao FTP.");
+			}
+		}
+		else
+		{
+			throw new IOException("Não foi possível conectar-se ao FTP.");
+		}
+	}
+	
 	public static void createFileFtp(String hostName, String fileName, String userName, String password, String text) throws IOException {
 		FTPClient ftp = new FTPClient();
 		ftp.connect( hostName );
@@ -52,6 +85,25 @@ public class Functions {
 		ftp.logout();
 		ftp.disconnect();
     }
+	
+	public static void createFileFtp2() throws IOException{
+		FTPClient client = new FTPClient();
+		FTP ftp = new FTP(
+				"sftp://bancos.blob.core.windows.net", 
+				"bancos.envio.telefonica", 
+				"Ia6GM3ceCT+HfXaN+39GUnjAO9n3xe9G", 
+				client);
+		
+		ftp.connect();
+		//ftp.getFile("TESTE111");
+		ftp.sendFTPFile("\\", "TESTE 111");
+		ftp.disconnectFTP();
+	}
+	
+	public static void createFileFtp3() throws IOException, JSchException{
+		Sftp sftp = new Sftp();
+		sftp.connect();
+	}
 	
 	public static String encrypt(String plainText) throws Exception {
 
