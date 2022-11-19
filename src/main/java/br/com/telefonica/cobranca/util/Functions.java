@@ -1,4 +1,4 @@
-package Helpers;
+package br.com.telefonica.cobranca.util;
 
 import java.io.BufferedWriter;
 
@@ -86,24 +86,7 @@ public class Functions {
 		ftp.disconnect();
     }
 	
-	public static void createFileFtp2() throws IOException{
-		FTPClient client = new FTPClient();
-		FTP ftp = new FTP(
-				"sftp://bancos.blob.core.windows.net", 
-				"bancos.envio.telefonica", 
-				"Ia6GM3ceCT+HfXaN+39GUnjAO9n3xe9G", 
-				client);
-		
-		ftp.connect();
-		//ftp.getFile("TESTE111");
-		ftp.sendFTPFile("\\", "TESTE 111");
-		ftp.disconnectFTP();
-	}
-	
-	public static void createFileFtp3() throws IOException, JSchException{
-		Sftp sftp = new Sftp();
-		sftp.connect();
-	}
+
 	
 	public static String encrypt(String plainText) throws Exception {
 
