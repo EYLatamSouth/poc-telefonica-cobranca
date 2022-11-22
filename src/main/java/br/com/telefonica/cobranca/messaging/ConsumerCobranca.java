@@ -1,5 +1,6 @@
 package br.com.telefonica.cobranca.messaging;
 
+import br.com.telefonica.cobranca.service.ProcessBillings;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,10 @@ public class ConsumerCobranca {
 	
 	@Autowired
 	private ProducerCobranca producer;
-	
+
+	@Autowired
+	private ProcessBillings processBillings;
+
     @Value("${topic.name.consumer}")
     private String topicName;
     
@@ -53,6 +57,8 @@ public class ConsumerCobranca {
     	
     	
     	CobrancaMongoDB billingSaved = billingService.save(billing);
+
+		processBillings.uploadBillings(billing);
     	
     	// producer.send(billingSaved);
     	// logger.info("Finalizou com sucesso o recebimento e envio de evento do Kafka Confluent!!!");

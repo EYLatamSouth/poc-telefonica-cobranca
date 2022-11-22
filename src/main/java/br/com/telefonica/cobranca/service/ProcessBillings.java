@@ -1,5 +1,6 @@
 package br.com.telefonica.cobranca.service;
 
+import br.com.telefonica.cobranca.model.CobrancaMongoDB;
 import br.com.telefonica.cobranca.util.Functions;
 import br.com.telefonica.cobranca.util.SftpClient;
 import com.jcraft.jsch.JSchException;
@@ -63,6 +64,38 @@ public class ProcessBillings {
             String billingStatus = "Fatura paga em "+new Date();
             String encryptedStatus = Functions.encrypt(billingStatus);
             String fileName = String.format("billing%1s.txt",System.currentTimeMillis());
+            File sentFolder = new File(sentFilesDirectory);
+            if(!sentFolder.exists()){
+                sentFolder.mkdir();
+            }
+            FileOutputStream billingOutPut = new FileOutputStream(sentFilesDirectory+fileName);
+            billingOutPut.write(encryptedStatus.getBytes());
+            System.out.println("Connecting on SFTP Server");
+            sftpClient.authPassword(sftpPass);
+            sftpClient.uploadFile(sentFilesDirectory+fileName, fileName);
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            sftpClient.close();
+        }
+
+    }
+
+    public void uploadBillings(CobrancaMongoDB billing){
+        SftpClient sftpClient = new SftpClient(sftpServer, sendUser);
+        try {
+            String billingStatus = String.format("BillingID=%1$s Vencimento=%2$s Valor=%3$s", billing.getBilling_id(),
+                    billing.getBilling_vencimento(), billing.getBilling_valor_fatura());
+            System.out.println("------ "+billingStatus);
+            String encryptedStatus = Functions.encrypt(billingStatus);
+            System.out.println("------ "+encryptedStatus);
+            String fileName = String.format("billing_%1s.txt", billing.getBilling_id());
             File sentFolder = new File(sentFilesDirectory);
             if(!sentFolder.exists()){
                 sentFolder.mkdir();
