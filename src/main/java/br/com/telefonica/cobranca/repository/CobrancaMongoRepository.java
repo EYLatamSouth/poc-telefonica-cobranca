@@ -12,4 +12,5 @@ public interface CobrancaMongoRepository extends MongoRepository<CobrancaMongoDB
 
     List<CobrancaMongoDB> findByBilling_status(String status);
 
+    CobrancaMongoDB findByBilling_id(Long id);
 }

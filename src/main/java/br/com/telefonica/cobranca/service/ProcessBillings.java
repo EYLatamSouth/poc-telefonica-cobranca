@@ -125,18 +125,30 @@ public class ProcessBillings {
 
     public void searchStatusThanUpload(){
 
-        List<CobrancaMongoDB> listaStatusNOK = cobrancaMongoRepository.findByBilling_status("NOK");
+        List<CobrancaMongoDB> listaStatusNOK = cobrancaMongoRepository.findByBilling_status("1");
 
             listaStatusNOK.forEach(status -> {
                 try {
                     uploadBillings(status);
-                    status.setBilling_status("OK");
+                    status.setBilling_status("0");
                 }catch (Exception e){
-                    status.setBilling_status("NOK");
+                    status.setBilling_status("1");
                 }finally {
                     cobrancaMongoRepository.save(status);
                 }
             });
+
+    }
+
+    public void decryptAndUpdateMongo() throws Exception {
+
+        
+        //fazer while / for verificando se passou por todos os arquivos do diretorio "receivedFilesDirectory" 
+        Long i = null;
+
+        Functions.decrypt("teste")
+
+        cobrancaMongoRepository.findByBilling_id(i);
 
     }
 }
