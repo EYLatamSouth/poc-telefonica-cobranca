@@ -1,10 +1,12 @@
 package br.com.telefonica.cobranca.service;
 
 import br.com.telefonica.cobranca.model.CobrancaMongoDB;
+import br.com.telefonica.cobranca.repository.CobrancaMongoRepository;
 import br.com.telefonica.cobranca.util.Functions;
 import br.com.telefonica.cobranca.util.SftpClient;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +33,9 @@ public class ProcessBillings {
 
     @Value("${directory.sent}")
     private String sentFilesDirectory;
+    
+    @Autowired
+    private CobrancaMongoRepository cobrancaMongoRepository;
 
     public void readBillings(){
         System.out.println("Starting reading FTP Server");
@@ -116,6 +121,22 @@ public class ProcessBillings {
         finally {
             sftpClient.close();
         }
+    }
+
+    public void searchStatusThanUpload(){
+
+        List<CobrancaMongoDB> listaStatusNOK = cobrancaMongoRepository.findByBilling_status("NOK");
+
+            listaStatusNOK.forEach(status -> {
+                try {
+                    uploadBillings(status);
+                    status.setBilling_status("OK");
+                }catch (Exception e){
+                    status.setBilling_status("NOK");
+                }finally {
+                    cobrancaMongoRepository.save(status);
+                }
+            });
 
     }
 }
