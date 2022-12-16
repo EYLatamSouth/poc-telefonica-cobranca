@@ -17,7 +17,7 @@ public class SchedulerProcessesBilling {
         try {
             processBillings.searchStatusThanUpload();
         } catch (Exception e){
-            throw new
+            throw new RuntimeException();
         }
 
     }
