@@ -12,6 +12,7 @@ public class CobrancaMongoDB {
 	private Long billing_data_pgto;
 	private Double billing_valor_fatura;
 	private Boolean __deleted;
+	private Boolean processed;
 
 	public void setBilling_id(Long billing_id) {
 		this.billing_id = billing_id;
@@ -54,6 +55,14 @@ public class CobrancaMongoDB {
 	}
 	public Boolean get__deleted() {
 		return __deleted;
+	}
+
+	public Boolean getProcessed() {
+		return processed;
+	}
+
+	public void setProcessed(Boolean processed) {
+		this.processed = processed;
 	}
 	
 	

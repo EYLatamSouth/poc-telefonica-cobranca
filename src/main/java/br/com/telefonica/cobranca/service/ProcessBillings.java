@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 @Component("processBillings")
 public class ProcessBillings {
@@ -33,6 +34,9 @@ public class ProcessBillings {
 
     @Value("${directory.sent}")
     private String sentFilesDirectory;
+
+    @Value("${directory.processed}")
+    private String processedFilesDirectory;
     
     @Autowired
     private CobrancaMongoRepository cobrancaMongoRepository;
@@ -142,13 +146,36 @@ public class ProcessBillings {
 
     public void decryptAndUpdateMongo() throws Exception {
 
-        
-        //fazer while / for verificando se passou por todos os arquivos do diretorio "receivedFilesDirectory" 
-        Long i = null;
+        try {
+            File folder = new File(receivedFilesDirectory);
+            for (File x : folder.listFiles()){
 
-        Functions.decrypt("teste")
+                Scanner sc = new Scanner(x);
+                String line = sc.nextLine();
 
-        cobrancaMongoRepository.findByBilling_id(i);
+                String DecriptedLine = Functions.decrypt(line);
 
+                String[] split = DecriptedLine.split(";");
+                String idstring = split[8];
+                Long id = Long.parseLong(idstring);
+
+                CobrancaMongoDB billing = cobrancaMongoRepository.findByBilling_id(id);
+                if (billing != null){
+                    String status = split[11];
+                    billing.setBilling_status(status);
+                    cobrancaMongoRepository.save(billing);
+                }
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void processesServiceOk(){
+        Functions.processesOkAndCopyToPath(receivedFilesDirectory, processedFilesDirectory);
+    }
+
+    public void processesServiceNOk(){
+        Functions.processesNOkAndCopyToPath(receivedFilesDirectory, processedFilesDirectory);
     }
 }

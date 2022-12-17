@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.spec.AlgorithmParameterSpec;
 import java.util.Base64;
@@ -14,6 +16,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.google.common.io.Files;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -132,4 +135,50 @@ public class Functions {
         String decryptedText = new String(decrypted, "UTF-8");
         return decryptedText;
     }
+
+	public static void processesOkAndCopyToPath(String pathSource, String pathDestino){
+		try
+		{
+			Path src = Paths.get(pathSource);
+			Path dest = Paths.get(pathDestino);
+			Files.copy(src.toFile(), dest.toFile());
+
+			File folder = new File(pathDestino);
+			for (File file : folder.listFiles()){
+
+				FileWriter fw = new FileWriter(file,true);
+				fw.write("0");
+				fw.close();
+				String fileName = file.getName();
+				Files.move(src.toFile(), dest.resolveSibling(fileName + "OK").toFile());
+			}
+		}
+		catch(IOException ioe)
+		{
+			System.err.println("IOException: " + ioe.getMessage());
+		}
+	}
+
+	public static void processesNOkAndCopyToPath(String pathSource, String pathDestino){
+		try
+		{
+			Path src = Paths.get(pathSource);
+			Path dest = Paths.get(pathDestino);
+			Files.copy(src.toFile(), dest.toFile());
+
+			File folder = new File(pathDestino);
+			for (File file : folder.listFiles()){
+
+			FileWriter fw = new FileWriter(file,true);
+			fw.write("1");
+			fw.close();
+			String fileName = file.getName();
+			Files.move(src.toFile(), dest.resolveSibling(fileName + "NOK").toFile());
+			}
+		}
+		catch(IOException ioe)
+		{
+			System.err.println("IOException: " + ioe.getMessage());
+		}
+	}
 }
