@@ -57,8 +57,6 @@ public class ConsumerCobranca {
     	
     	
     	CobrancaMongoDB billingSaved = billingService.save(billing);
-
-		processBillings.uploadBillings(billing);
     	
     	// producer.send(billingSaved);
     	// logger.info("Finalizou com sucesso o recebimento e envio de evento do Kafka Confluent!!!");

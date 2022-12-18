@@ -1,16 +1,19 @@
 package br.com.telefonica.cobranca.service;
 
 import br.com.telefonica.cobranca.model.CobrancaMongoDB;
+import br.com.telefonica.cobranca.repository.CobrancaMongoRepository;
 import br.com.telefonica.cobranca.util.Functions;
 import br.com.telefonica.cobranca.util.SftpClient;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 @Component("processBillings")
 public class ProcessBillings {
@@ -31,6 +34,12 @@ public class ProcessBillings {
 
     @Value("${directory.sent}")
     private String sentFilesDirectory;
+
+    @Value("${directory.processed}")
+    private String processedFilesDirectory;
+    
+    @Autowired
+    private CobrancaMongoRepository cobrancaMongoRepository;
 
     public void readBillings(){
         System.out.println("Starting reading FTP Server");
@@ -116,6 +125,57 @@ public class ProcessBillings {
         finally {
             sftpClient.close();
         }
+    }
 
+    public void searchStatusThanUpload(){
+
+        List<CobrancaMongoDB> listaStatusNOK = cobrancaMongoRepository.findByBilling_status("1");
+
+            listaStatusNOK.forEach(status -> {
+                try {
+                    uploadBillings(status);
+                    status.setBilling_status("0");
+                }catch (Exception e){
+                    status.setBilling_status("1");
+                }finally {
+                    cobrancaMongoRepository.save(status);
+                }
+            });
+
+    }
+
+    public void decryptAndUpdateMongo() throws Exception {
+
+        try {
+            File folder = new File(receivedFilesDirectory);
+            for (File x : folder.listFiles()){
+
+                Scanner sc = new Scanner(x);
+                String line = sc.nextLine();
+
+                String DecriptedLine = Functions.decrypt(line);
+
+                String[] split = DecriptedLine.split(";");
+                String idstring = split[8];
+                Long id = Long.parseLong(idstring);
+
+                CobrancaMongoDB billing = cobrancaMongoRepository.findByBilling_id(id);
+                if (billing != null){
+                    String status = split[11];
+                    billing.setBilling_status(status);
+                    cobrancaMongoRepository.save(billing);
+                }
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void processesServiceOk(){
+        Functions.processesOkAndCopyToPath(receivedFilesDirectory, processedFilesDirectory);
+    }
+
+    public void processesServiceNOk(){
+        Functions.processesNOkAndCopyToPath(receivedFilesDirectory, processedFilesDirectory);
     }
 }
