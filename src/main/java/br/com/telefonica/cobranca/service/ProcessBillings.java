@@ -1,11 +1,14 @@
 package br.com.telefonica.cobranca.service;
 
+import br.com.telefonica.cobranca.messaging.ProducerCobranca;
 import br.com.telefonica.cobranca.model.CobrancaMongoDB;
 import br.com.telefonica.cobranca.repository.CobrancaMongoRepository;
 import br.com.telefonica.cobranca.util.Functions;
 import br.com.telefonica.cobranca.util.SftpClient;
+import br.com.telefonica.cobranca.util.Status;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
+import org.apache.kafka.common.metrics.Stat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -40,6 +43,9 @@ public class ProcessBillings {
     
     @Autowired
     private CobrancaMongoRepository cobrancaMongoRepository;
+
+    @Autowired
+    private ProducerCobranca producerCobranca;
 
     public void readBillings(){
         System.out.println("Starting reading FTP Server");
@@ -134,9 +140,9 @@ public class ProcessBillings {
             listaStatusNOK.forEach(status -> {
                 try {
                     uploadBillings(status);
-                    status.setBilling_status("0");
+                    status.setBilling_status(Status.Processed.toString());
                 }catch (Exception e){
-                    status.setBilling_status("1");
+                    status.setBilling_status(Status.NotProcessed.toString());
                 }finally {
                     cobrancaMongoRepository.save(status);
                 }
@@ -164,6 +170,7 @@ public class ProcessBillings {
                     String status = split[11];
                     billing.setBilling_status(status);
                     cobrancaMongoRepository.save(billing);
+                    producerCobranca.send(billing);
                 }
             }
         }catch (Exception e){
