@@ -1,6 +1,6 @@
 package br.com.telefonica.cobranca.controller;
 
-import br.com.telefonica.cobranca.service.ProcessBillings;
+import br.com.telefonica.cobranca.service.ProcessBillingsService;
 import br.com.telefonica.cobranca.util.Functions;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProcessesController {
 
     @Autowired
-    private ProcessBillings processBillingsService;
+    private ProcessBillingsService processBillingsService;
 
     @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 400, message = "Bad Request"),
             @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbiden"),

@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface CobrancaMongoRepository extends MongoRepository<CobrancaMongoDB, Integer>{
 
-    List<CobrancaMongoDB> findByBilling_status(String status);
+    List<CobrancaMongoDB> findByBillingStatus(String status);
 
-    CobrancaMongoDB findByBilling_id(Long id);
+    CobrancaMongoDB findByBillingId(Long id);
 }

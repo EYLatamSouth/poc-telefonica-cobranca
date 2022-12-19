@@ -1,6 +1,6 @@
 package br.com.telefonica.cobranca.scheduler;
 
-import br.com.telefonica.cobranca.service.ProcessBillings;
+import br.com.telefonica.cobranca.service.ProcessBillingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class SchedulerProcessesBilling {
 
     @Autowired
-    private ProcessBillings processBillings;
+    private ProcessBillingsService processBillings;
 
     @Scheduled(cron = "0 0 18 * * 2,4", zone = "America/Sao_Paulo")
     public void rotinaCadastroDespesasApKmOnline() {

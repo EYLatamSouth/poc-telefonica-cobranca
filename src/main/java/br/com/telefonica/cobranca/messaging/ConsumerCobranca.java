@@ -1,6 +1,7 @@
 package br.com.telefonica.cobranca.messaging;
 
-import br.com.telefonica.cobranca.service.ProcessBillings;
+import br.com.telefonica.cobranca.service.CobrancaServiceImpl;
+import br.com.telefonica.cobranca.service.ProcessBillingsService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public class ConsumerCobranca {
 	private ProducerCobranca producer;
 
 	@Autowired
-	private ProcessBillings processBillings;
+	private ProcessBillingsService processBillings;
 
     @Value("${topic.name.consumer}")
     private String topicName;

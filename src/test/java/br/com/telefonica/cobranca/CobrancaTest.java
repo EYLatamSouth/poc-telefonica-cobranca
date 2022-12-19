@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @CamelSpringBootTest
-public class MySpringBootApplicationTest {
+public class CobrancaTest {
 
 	@Autowired
 	private CamelContext camelContext;
