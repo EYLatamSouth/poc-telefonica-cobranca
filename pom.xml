@@ -16,6 +16,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <spring.boot-version>2.7.3</spring.boot-version>
     <surefire.plugin.version>3.0.0-M4</surefire.plugin.version>
+    <version.spring.cloud.azure>4.5.0</version.spring.cloud.azure>
   </properties>
 
   <dependencyManagement>
@@ -35,6 +36,14 @@
         <version>3.19.0</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <!-- Vault -->
+      <dependency>
+          <groupId>com.azure.spring</groupId>
+          <artifactId>spring-cloud-azure-dependencies</artifactId>
+          <version>${version.spring.cloud.azure}</version>
+          <type>pom</type>
+          <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -149,6 +158,11 @@
 	    <artifactId>applicationinsights-runtime-attach</artifactId>
 	    <version>3.4.3</version>
 	</dependency>
+    <!-- Vault -->
+    <dependency>
+        <groupId>com.azure.spring</groupId>
+        <artifactId>spring-cloud-azure-starter-keyvault-secrets</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
