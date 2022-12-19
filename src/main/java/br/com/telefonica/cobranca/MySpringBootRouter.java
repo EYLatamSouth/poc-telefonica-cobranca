@@ -14,7 +14,7 @@ public class MySpringBootRouter extends RouteBuilder {
     @Override
     public void configure() {
         from("timer:billing?period={{timer.period}}").routeId("billing")
-            .transform().method("processBillings", "sendBillings")
+            .transform().method("processBillingsServiceImpl", "sendBillings")
             .end();
     }
 

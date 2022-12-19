@@ -1,5 +1,4 @@
 package br.com.telefonica.cobranca.service;
-
 import br.com.telefonica.cobranca.model.CobrancaMongoDB;
 import br.com.telefonica.cobranca.model.ProcessBillings;
 import br.com.telefonica.cobranca.repository.CobrancaMongoRepository;
@@ -10,6 +9,7 @@ import com.jcraft.jsch.SftpException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,7 +19,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-@Component("processBillings")
+@Component("processBillingsServiceImpl")
+@Service
 public class ProcessBillingsServiceImpl implements ProcessBillingsService {
 
     @Autowired

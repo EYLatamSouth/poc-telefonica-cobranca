@@ -1,12 +1,6 @@
 package br.com.telefonica.cobranca.service;
 
 import br.com.telefonica.cobranca.model.CobrancaMongoDB;
-import br.com.telefonica.cobranca.repository.CobrancaMongoRepository;
-import br.com.telefonica.cobranca.util.Functions;
-import br.com.telefonica.cobranca.util.SftpClient;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.SftpException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
