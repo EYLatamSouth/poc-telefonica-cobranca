@@ -39,6 +39,14 @@ public class ProcessesController {
         }
     }
 
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbiden"),
+            @ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 422, message = "Unprocessable Entity"),
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+            @ApiResponse(code = 502, message = "Bad Gateway"),
+            @ApiResponse(code = 503, message = "Service Unavailable"),
+            @ApiResponse(code = 504, message = "Gateway Timeout"), })
+    @GetMapping("/nok")
     public ResponseEntity<?> processesNOk() {
 
         try {
@@ -47,6 +55,49 @@ public class ProcessesController {
             return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             String erro = "Erro no processesNOk";
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+        }
+    }
+
+    //Decripta e faz o update do status no mongo e depois faz o billing SEND.
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbiden"),
+            @ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 422, message = "Unprocessable Entity"),
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+            @ApiResponse(code = 502, message = "Bad Gateway"),
+            @ApiResponse(code = 503, message = "Service Unavailable"),
+            @ApiResponse(code = 504, message = "Gateway Timeout"), })
+    @GetMapping("/updateMongo")
+    public ResponseEntity<?> decryptAndUpdateMongo() {
+
+        try {
+            processBillingsService.decryptAndUpdateMongo();
+            System.out.println("decryptAndUpdateMongo OK");
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            String erro = "decryptAndUpdateMongo NOk";
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
+        }
+    }
+
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Ok"), @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"), @ApiResponse(code = 403, message = "Forbiden"),
+            @ApiResponse(code = 404, message = "Not Found"), @ApiResponse(code = 422, message = "Unprocessable Entity"),
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+            @ApiResponse(code = 502, message = "Bad Gateway"),
+            @ApiResponse(code = 503, message = "Service Unavailable"),
+            @ApiResponse(code = 504, message = "Gateway Timeout"), })
+    @GetMapping("/searchStatusThanUpload")
+    public ResponseEntity<?> searchStatusThanUpload() {
+
+        try {
+            processBillingsService.searchStatusThanUpload();
+            System.out.println("searchStatusThanUpload OK");
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            String erro = "searchStatusThanUpload NOk";
 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
         }
