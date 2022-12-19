@@ -8,6 +8,13 @@ POC microserviço de cobrança para a Telefonica
 mvn clean compile package
 ```
 
+or
+
+```
+./gradlew bootJar
+```
+
+
 
 ## Build docker
 
